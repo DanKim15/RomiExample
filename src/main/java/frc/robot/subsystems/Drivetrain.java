@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
@@ -74,10 +75,11 @@ public class Drivetrain extends SubsystemBase {
     m_rightMotor.feed();
     
   }
-  public void ffDrive(double speed) {
-    setSpeed = speed;
-    double setVolts = ff.calculate(speed);
-    tankDrive(setVolts*1.0125, setVolts);
+  public void ffDrive(double leftSpeed, double rightSpeed) {
+    double clampedLeft = MathUtil.clamp(leftSpeed, -0.7, 0.7);
+    double clampedRight = MathUtil.clamp(rightSpeed, -0.7, 0.7);
+    setSpeed = (clampedLeft + clampedRight) / 2;
+    tankDrive(ff.calculate(clampedLeft), ff.calculate(clampedRight));
   }
 
   public void resetEncoders() {
@@ -103,6 +105,12 @@ public class Drivetrain extends SubsystemBase {
 
   public double getAverageDistanceInch() {
     return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
+  }
+  public double getLeftDistanceMeter() {
+    return getLeftDistanceInch() * 0.0254;
+  }
+  public double getRightDistanceMeter() {
+    return getRightDistanceInch() * 0.0254;
   }
 
   /**

@@ -18,5 +18,9 @@ public final class Constants {
         public static final double kvVolts = 0.513;
         public static final double maxVelocity = 1;
         public static final double maxAccel = 2;
+
+        public static final double kDriveP = 1.5;
+        public static final double kDriveI = 0;
+        public static final double kDriveD = 0;
     }
 }

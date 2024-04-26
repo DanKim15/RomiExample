@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
-import frc.robot.commands.DriveDistanceTrap;
+import frc.robot.commands.PIDLine;
 import frc.robot.commands.AutoTestPath;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.romi.OnBoardIO;
@@ -73,10 +73,10 @@ public class RobotContainer {
         .onFalse(new PrintCommand("Button A Released"));
 
     // Setup SmartDashboard options
-    m_chooser.setDefaultOption("Auto Test Path", new AutoTestPath(m_drivetrain));
+    m_chooser.addOption("Auto Test Path", new AutoTestPath(m_drivetrain));
     m_chooser.addOption("Auto Routine Time", new AutonomousTime(m_drivetrain));
     m_chooser.addOption("Auto Routine Distance", new AutonomousDistance(m_drivetrain));
-    m_chooser.addOption("Trapezoid line", new DriveDistanceTrap(4, m_drivetrain));
+    m_chooser.setDefaultOption("PID line", new PIDLine(1, m_drivetrain));
     SmartDashboard.putData(m_chooser);
   }
 

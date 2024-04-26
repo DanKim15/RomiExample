@@ -11,7 +11,7 @@ public class DriveDistanceTrap extends TrapezoidProfileCommand {
             new TrapezoidProfile(
                 new TrapezoidProfile.Constraints(DriveConstants.maxVelocity, DriveConstants.maxAccel)
             ),
-            setpointState -> drive.ffDrive(setpointState.velocity),
+            setpointState -> drive.ffDrive(setpointState.velocity, setpointState.velocity),
             () -> new TrapezoidProfile.State(meters, 0),
             TrapezoidProfile.State::new,
             drive);
