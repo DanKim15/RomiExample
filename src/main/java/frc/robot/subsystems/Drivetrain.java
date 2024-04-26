@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Encoder;
@@ -32,6 +33,10 @@ public class Drivetrain extends SubsystemBase {
   private final Encoder m_rightEncoder = new Encoder(6, 7);
 
   SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVolts);
+
+  SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.maxAccel);
+
+  private double initialAngle = 0;
 
 
   // Set up the differential drive controller
@@ -75,11 +80,11 @@ public class Drivetrain extends SubsystemBase {
     m_rightMotor.feed();
     
   }
-  public void ffDrive(double leftSpeed, double rightSpeed) {
-    double clampedLeft = MathUtil.clamp(leftSpeed, -0.7, 0.7);
-    double clampedRight = MathUtil.clamp(rightSpeed, -0.7, 0.7);
-    setSpeed = (clampedLeft + clampedRight) / 2;
-    tankDrive(ff.calculate(clampedLeft), ff.calculate(clampedRight));
+  public void ffDrive(double speed) {
+    double clampedSpeed = MathUtil.clamp(speed, -DriveConstants.maxVelocity, DriveConstants.maxVelocity);
+    setSpeed = clampedSpeed;
+    double setVolts = filter.calculate(ff.calculate(clampedSpeed));
+    tankDrive((initialAngle - getGyroAngleZ()) * DriveConstants.angleCorrection + setVolts, setVolts);
   }
 
   public void resetEncoders() {
@@ -106,11 +111,8 @@ public class Drivetrain extends SubsystemBase {
   public double getAverageDistanceInch() {
     return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
   }
-  public double getLeftDistanceMeter() {
-    return getLeftDistanceInch() * 0.0254;
-  }
-  public double getRightDistanceMeter() {
-    return getRightDistanceInch() * 0.0254;
+  public double getAverageDistanceMeter() {
+    return getAverageDistanceInch() * 0.0254;
   }
 
   /**
@@ -170,6 +172,10 @@ public class Drivetrain extends SubsystemBase {
   /** Reset the gyro. */
   public void resetGyro() {
     m_gyro.reset();
+  }
+
+  public void resetInitialAngle() {
+    initialAngle = m_gyro.getAngleZ();
   }
 
   public double getAvgSpeed() {

@@ -25,12 +25,13 @@ public class PIDLine extends Command {
   @Override
   public void initialize() {
     m_drive.resetEncoders();
+    m_drive.resetInitialAngle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.ffDrive(pid.calculate(m_drive.getLeftDistanceMeter(), m_setpoint), pid.calculate(m_drive.getRightDistanceMeter(), m_setpoint));
+    m_drive.ffDrive(pid.calculate(m_drive.getAverageDistanceMeter(), m_setpoint));
   }
 
   // Called once the command ends or is interrupted.
