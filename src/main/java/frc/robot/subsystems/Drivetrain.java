@@ -84,6 +84,7 @@ public class Drivetrain extends SubsystemBase {
     double clampedSpeed = MathUtil.clamp(speed, -DriveConstants.maxVelocity, DriveConstants.maxVelocity);
     setSpeed = clampedSpeed;
     double setVolts = filter.calculate(ff.calculate(clampedSpeed));
+    //double setVolts = ff.calculate(clampedSpeed);
     tankDrive((initialAngle - getGyroAngleZ()) * DriveConstants.angleCorrection + setVolts, setVolts);
   }
 

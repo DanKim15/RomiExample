@@ -11,6 +11,7 @@ import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
 import frc.robot.commands.PIDLine;
+import frc.robot.commands.PIDTurn;
 import frc.robot.commands.AutoTestPath;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.romi.OnBoardIO;
@@ -77,6 +78,7 @@ public class RobotContainer {
     m_chooser.addOption("Auto Routine Time", new AutonomousTime(m_drivetrain));
     m_chooser.addOption("Auto Routine Distance", new AutonomousDistance(m_drivetrain));
     m_chooser.setDefaultOption("PID line", new PIDLine(2, m_drivetrain));
+    m_chooser.addOption("PID turn", new PIDTurn(90, m_drivetrain));
     SmartDashboard.putData(m_chooser);
   }
 
