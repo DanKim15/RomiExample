@@ -81,10 +81,11 @@ public class Drivetrain extends SubsystemBase {
     
   }
   public void ffDrive(double speed) {
-    double clampedSpeed = MathUtil.clamp(speed, -DriveConstants.maxVelocity, DriveConstants.maxVelocity);
-    setSpeed = clampedSpeed;
-    double setVolts = filter.calculate(ff.calculate(clampedSpeed));
-    //double setVolts = ff.calculate(clampedSpeed);
+    double clampedTargetSpeed = MathUtil.clamp(speed, -DriveConstants.maxVelocity, DriveConstants.maxVelocity);
+    setSpeed = filter.calculate(clampedTargetSpeed);
+    double setVolts = ff.calculate(setSpeed);
+    //setSpeed = clampedTargetSpeed;
+    //double setVolts = ff.calculate(clampedTargetSpeed);
     tankDrive((initialAngle - getGyroAngleZ()) * DriveConstants.angleCorrection + setVolts, setVolts);
   }
 

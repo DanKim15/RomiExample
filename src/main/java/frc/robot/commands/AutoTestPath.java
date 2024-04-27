@@ -24,13 +24,13 @@ public class AutoTestPath extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.tankDrive(ff.calculate(0.51), ff.calculate(0.51));
+    m_drive.ffDrive(0.1);;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.tankDrive(0, 0);
+    m_drive.ffDrive(0);
   }
 
   // Returns true when the command should end.
