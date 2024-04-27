@@ -26,6 +26,7 @@ public class PIDLine extends Command {
   public void initialize() {
     m_drive.resetEncoders();
     m_drive.resetInitialAngle();
+    m_drive.zeroSlew();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

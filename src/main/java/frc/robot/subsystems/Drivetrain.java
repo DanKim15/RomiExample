@@ -32,9 +32,9 @@ public class Drivetrain extends SubsystemBase {
   private final Encoder m_leftEncoder = new Encoder(4, 5);
   private final Encoder m_rightEncoder = new Encoder(6, 7);
 
-  SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVolts);
+  private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVolts);
 
-  SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.maxAccel);
+  private final SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.maxAccel);
 
   private double initialAngle = 0;
 
@@ -87,6 +87,10 @@ public class Drivetrain extends SubsystemBase {
     //setSpeed = clampedTargetSpeed;
     //double setVolts = ff.calculate(clampedTargetSpeed);
     tankDrive((initialAngle - getGyroAngleZ()) * DriveConstants.angleCorrection + setVolts, setVolts);
+  }
+
+  public void zeroSlew() {
+    filter.calculate(0);
   }
 
   public void resetEncoders() {
