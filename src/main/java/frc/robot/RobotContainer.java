@@ -77,8 +77,12 @@ public class RobotContainer {
     m_chooser.addOption("Auto Test Path", new AutoTestPath(m_drivetrain));
     m_chooser.addOption("Auto Routine Time", new AutonomousTime(m_drivetrain));
     m_chooser.addOption("Auto Routine Distance", new AutonomousDistance(m_drivetrain));
-    m_chooser.setDefaultOption("PID line", new PIDLine(2, m_drivetrain));
+    m_chooser.addOption("PID line", new PIDLine(2, m_drivetrain));
     m_chooser.addOption("PID turn", new PIDTurn(90, m_drivetrain));
+    m_chooser.setDefaultOption("Full Auto Path", new PIDLine(0.873, m_drivetrain)
+      .andThen(new PIDTurn(-90, m_drivetrain))
+      .andThen(new PIDLine(1.75, m_drivetrain))
+      );
     SmartDashboard.putData(m_chooser);
   }
 

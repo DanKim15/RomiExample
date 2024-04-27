@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Encoder;
@@ -90,8 +91,9 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void zeroSlew() {
-    filter.calculate(0);
+    filter.reset(0);
   }
+
 
   public void resetEncoders() {
     m_leftEncoder.reset();
@@ -118,7 +120,7 @@ public class Drivetrain extends SubsystemBase {
     return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
   }
   public double getAverageDistanceMeter() {
-    return getAverageDistanceInch() * 0.0254;
+    return Units.inchesToMeters(getAverageDistanceInch());
   }
 
   /**
