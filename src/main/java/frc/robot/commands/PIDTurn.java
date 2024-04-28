@@ -17,35 +17,38 @@ public class PIDTurn extends Command {
 
   private final PIDController pid = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD);
 
+  
+
   public PIDTurn(double angle, Drivetrain drive) {
     m_drive = drive; 
     targetAngle = angle;
     addRequirements(drive);
-    pid.setTolerance(1.5);
+    pid.setTolerance(3);
+    pid.setIZone(60);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_drive.setTargetAngle(targetAngle);
+    System.out.println(m_drive.getTargetAngle());
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double input = MathUtil.clamp(pid.calculate(m_drive.getGyroAngleZ(), m_drive.getTargetAngle()), -0.5, 0.5);
-    if (targetAngle < 0) {
-      m_drive.tankDrive(input, -input);
-    }
-    else {
-      m_drive.tankDrive(-input, input);
-    }
+    m_drive.tankDrive(input, -input);
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    System.out.println("Done turn");
+    m_drive.stopMotors();
+  }
 
   // Returns true when the command should end.
   @Override

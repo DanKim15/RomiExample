@@ -6,7 +6,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class AutoTestPath extends Command {
-  SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVolts);
+  SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.ksLeftVolts, DriveConstants.kvLeftVolts);
   private final Drivetrain m_drive;
   private long startTime;
   private final long endTime = 2000;

@@ -39,7 +39,7 @@ public class PIDLine extends Command {
   @Override
   public void end(boolean interrupted) {
     m_drive.ffDrive(0);
-    System.out.println("Finished");
+    System.out.println("Done line");
   }
 
   // Returns true when the command should end.

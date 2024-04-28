@@ -14,19 +14,21 @@ package frc.robot;
  */
 public final class Constants {
     public static final class DriveConstants {
-        public static final double ksVolts = 0.06;
-        public static final double kvVolts = 0.5;
-        public static final double maxVelocity = 0.7;
+        public static final double ksLeftVolts = 0.063;
+        public static final double kvLeftVolts = 0.515;
+        public static final double ksRightVolts = 0.06;
+        public static final double kvRightVolts = 0.5;
+        public static final double maxVelocity = 0.9;
         public static final double maxAccel = 2;
 
-        public static final double kDriveP = 2;
+        public static final double kDriveP = 2.5;
         public static final double kDriveI = 0;
         public static final double kDriveD = 0;
 
-        public static final double kTurnP = 0.003;
-        public static final double kTurnI = 0;
+        public static final double kTurnP = 0.0046;
+        public static final double kTurnI = 0.000;
         public static final double kTurnD = 0;
 
-        public static final double angleCorrection = 0.02;
+        public static final double angleCorrection = 0.01;
     }
 }

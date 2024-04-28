@@ -33,7 +33,8 @@ public class Drivetrain extends SubsystemBase {
   private final Encoder m_leftEncoder = new Encoder(4, 5);
   private final Encoder m_rightEncoder = new Encoder(6, 7);
 
-  private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVolts);
+  private final SimpleMotorFeedforward ffLeft = new SimpleMotorFeedforward(DriveConstants.ksLeftVolts, DriveConstants.kvLeftVolts);
+  private final SimpleMotorFeedforward ffRight = new SimpleMotorFeedforward(DriveConstants.ksRightVolts, DriveConstants.kvRightVolts);
 
   private final SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.maxAccel);
 
@@ -47,7 +48,7 @@ public class Drivetrain extends SubsystemBase {
   // Set up the RomiGyro
   private final RomiGyro m_gyro = new RomiGyro();
 
-  private double setSpeed = 0;
+  private double targetSpeed = 0;
 
   // Set up the BuiltInAccelerometer
   private final BuiltInAccelerometer m_accelerometer = new BuiltInAccelerometer();
@@ -82,15 +83,13 @@ public class Drivetrain extends SubsystemBase {
     
   }
   public void ffDrive(double speed) {
-    double clampedTargetSpeed = MathUtil.clamp(speed, -DriveConstants.maxVelocity, DriveConstants.maxVelocity);
-    setSpeed = filter.calculate(clampedTargetSpeed);
-    double setVolts = ff.calculate(setSpeed);
+    double clampedSpeed = MathUtil.clamp(speed, -DriveConstants.maxVelocity, DriveConstants.maxVelocity);
+    targetSpeed = filter.calculate(clampedSpeed);
+    double setLeftVolts = ffLeft.calculate(targetSpeed);
+    double setRightVolts = ffRight.calculate(targetSpeed);
     //setSpeed = clampedTargetSpeed;
     //double setVolts = ff.calculate(clampedTargetSpeed);
-    arcadeDrive(setVolts, 
-      MathUtil.clamp((getGyroAngleZ() - targetAngle) * DriveConstants.angleCorrection, 
-      -DriveConstants.maxVelocity, 
-      DriveConstants.maxVelocity));
+    tankDrive((targetAngle - getGyroAngleZ()) * DriveConstants.angleCorrection + setLeftVolts, setRightVolts);
   }
 
   public void zeroSlew() {
@@ -193,11 +192,11 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double getAvgSpeed() {
-    return ((m_rightEncoder.getRate() + m_leftEncoder.getRate()) * 0.0254);
+    return Units.inchesToMeters(m_rightEncoder.getRate() + m_leftEncoder.getRate());
   }
 
   public double getSetSpeed() {
-    return setSpeed;
+    return targetSpeed;
   }
 
   @Override
@@ -205,7 +204,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void stopMotors() {
-    arcadeDrive(0, 0);;
+    tankDrive(0, 0);;
   }
 
 }

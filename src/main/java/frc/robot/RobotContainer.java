@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
+import frc.robot.commands.FullAutoPath;
 import frc.robot.commands.PIDLine;
 import frc.robot.commands.PIDTurn;
 import frc.robot.commands.AutoTestPath;
@@ -79,10 +80,7 @@ public class RobotContainer {
     m_chooser.addOption("Auto Routine Distance", new AutonomousDistance(m_drivetrain));
     m_chooser.addOption("PID line", new PIDLine(1.75, m_drivetrain));
     m_chooser.addOption("PID turn", new PIDTurn(90, m_drivetrain));
-    m_chooser.setDefaultOption("Full Auto Path", new PIDLine(0.89, m_drivetrain)
-      .andThen(new PIDTurn(-90, m_drivetrain))
-      .andThen(new PIDLine(1.77, m_drivetrain))
-      );
+    m_chooser.setDefaultOption("Full Auto Path", new FullAutoPath(m_drivetrain));
     SmartDashboard.putData(m_chooser);
   }
 
