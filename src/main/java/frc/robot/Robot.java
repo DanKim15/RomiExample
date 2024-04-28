@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // Get selected routine from the SmartDashboard
+    m_robotContainer.resetGyro();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)

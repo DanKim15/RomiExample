@@ -23,10 +23,10 @@ public final class Constants {
         public static final double kDriveI = 0;
         public static final double kDriveD = 0;
 
-        public static final double kTurnP = 0.005;
+        public static final double kTurnP = 0.003;
         public static final double kTurnI = 0;
         public static final double kTurnD = 0;
 
-        public static final double angleCorrection = 0.01;
+        public static final double angleCorrection = 0.02;
     }
 }

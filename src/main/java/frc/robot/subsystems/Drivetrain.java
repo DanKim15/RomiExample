@@ -37,7 +37,7 @@ public class Drivetrain extends SubsystemBase {
 
   private final SlewRateLimiter filter = new SlewRateLimiter(DriveConstants.maxAccel);
 
-  private double initialAngle = 0;
+  private double targetAngle = 0;
 
 
   // Set up the differential drive controller
@@ -69,7 +69,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
-    m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
+    m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate, false);
   }
   public void tankDrive(double leftSpeed, double rightSpeed) {
     m_diffDrive.tankDrive(leftSpeed, rightSpeed, false);
@@ -87,13 +87,23 @@ public class Drivetrain extends SubsystemBase {
     double setVolts = ff.calculate(setSpeed);
     //setSpeed = clampedTargetSpeed;
     //double setVolts = ff.calculate(clampedTargetSpeed);
-    tankDrive((initialAngle - getGyroAngleZ()) * DriveConstants.angleCorrection + setVolts, setVolts);
+    arcadeDrive(setVolts, 
+      MathUtil.clamp((getGyroAngleZ() - targetAngle) * DriveConstants.angleCorrection, 
+      -DriveConstants.maxVelocity, 
+      DriveConstants.maxVelocity));
   }
 
   public void zeroSlew() {
     filter.reset(0);
   }
 
+  public void setTargetAngle(double angle) {
+    targetAngle += angle;
+  }
+
+  public double getTargetAngle() {
+    return targetAngle;
+  }
 
   public void resetEncoders() {
     m_leftEncoder.reset();
@@ -182,10 +192,6 @@ public class Drivetrain extends SubsystemBase {
     m_gyro.reset();
   }
 
-  public void resetInitialAngle() {
-    initialAngle = m_gyro.getAngleZ();
-  }
-
   public double getAvgSpeed() {
     return ((m_rightEncoder.getRate() + m_leftEncoder.getRate()) * 0.0254);
   }
@@ -197,4 +203,9 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
   }
+
+  public void stopMotors() {
+    arcadeDrive(0, 0);;
+  }
+
 }

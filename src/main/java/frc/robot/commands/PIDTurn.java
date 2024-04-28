@@ -13,27 +13,34 @@ import frc.robot.subsystems.Drivetrain;
 public class PIDTurn extends Command {
 
   private final Drivetrain m_drive;
-  private final double targetAngle;
+  private double targetAngle;
 
-  PIDController pid = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD);
+  private final PIDController pid = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD);
 
   public PIDTurn(double angle, Drivetrain drive) {
     m_drive = drive; 
     targetAngle = angle;
     addRequirements(drive);
+    pid.setTolerance(1.5);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.resetGyro();
+    m_drive.setTargetAngle(targetAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double input = MathUtil.clamp(pid.calculate(m_drive.getGyroAngleZ(), targetAngle), -0.5, 0.5);
-    m_drive.tankDrive(input, -input);
+    double input = MathUtil.clamp(pid.calculate(m_drive.getGyroAngleZ(), m_drive.getTargetAngle()), -0.5, 0.5);
+    if (targetAngle < 0) {
+      m_drive.tankDrive(input, -input);
+    }
+    else {
+      m_drive.tankDrive(-input, input);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.

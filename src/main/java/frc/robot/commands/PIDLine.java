@@ -19,13 +19,13 @@ public class PIDLine extends Command {
     m_drive = drive;
     m_setpoint = distance;
     addRequirements(drive);
+    pid.setTolerance(0.03);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_drive.resetEncoders();
-    m_drive.resetInitialAngle();
     m_drive.zeroSlew();
   }
 
